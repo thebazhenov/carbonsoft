@@ -1,0 +1,13 @@
+version: '3'
+services:
+  bind:
+    image: sameersbn/bind:latest
+    container_name: bind
+    restart: always
+    dns: 127.0.0.1
+    ports:
+      - "10000:10000"
+      - "10.90.170.10:53:53"
+      - "10.90.170.10:53:53/udp"
+    volumes:
+      - ./data:/data

@@ -1,0 +1,53 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "name": "Launch Firefox debug EvaApp",
+            "url": "https://example.user.fake",
+            "webRoot": "${workspaceFolder}/crm",
+            "suggestPathMappingWizard": true,
+            "pathMappings": [
+                {
+                    "url": "webpack:///",
+                    "path": "${webRoot}/"
+                },
+            ]
+        },
+        {
+            "name": "Python: Debug Tests",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "purpose": [
+                "debug-test"
+            ],
+            "console": "integratedTerminal",
+            "env": {
+                "GEVENT_SUPPORT": "True"
+            },
+            "justMyCode": false
+        },
+
+        {
+            "command": "npm start -- --host 0.0.0.0 --port 4200 --configuration=custom --disable-host-check",
+            "name": "EVA APP Frontend",
+            "request": "launch",
+            "type": "node-terminal",
+            "cwd": "/opt/crm"
+        },
+        {
+            "name": "EVA APP Backend",
+            "type": "python",
+            "request": "launch",
+            "program": "manage.py",
+            "justMyCode": true,
+            "args": ["start", "--no-reload"],
+            "env": {"GEVENT_SUPPORT": "True"},
+            "cwd": "/opt/crm"
+        },
+    ]
+}

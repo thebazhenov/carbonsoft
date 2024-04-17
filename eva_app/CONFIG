@@ -1,0 +1,27 @@
+# Получать бесплатный SSL-сертификат от Lets Encrypt
+NGINX_USE_CERTBOT="0"
+
+# Параметры системы обновления
+UPDATE_SERVER="10.50.16.97"
+UPDATE_BRANCH="master"
+
+# Параметры SMTP-сервера для отправки почты
+EMAIL_HOST_ADDR='smtp.mail.ru'
+EMAIL_USE_SSL="1"
+EMAIL_PORT=465
+EMAIL_USER=''
+EMAIL_PASSWORD=''
+EMAIL_LOGIN=''
+
+# DNS-сервера
+DNS_SERVER1="8.8.8.8"
+DNS_SERVER2="8.8.4.4"
+
+# Настройка доступа в интернет через proxy
+# Пример прокси чеб пароля:
+# EGRESS_PROXY=proxyhost:proxyport
+# Пример прокси с паролем:
+# EGRESS_PROXY=username:password@proxyhost:proxyport
+#
+# Чтобы скачивание обновления через rsync использовало proxy, укажите:
+# RSYNC_USE_PROXY=1

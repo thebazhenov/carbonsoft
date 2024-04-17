@@ -1,0 +1,11 @@
+# !/bin/bash
+cd /opt/eva-app; cp -R /opt/eva-app/vassals/ /tmp/ && git stash && git pull && git stash pop
+cd /opt/eva-app/cmf && git stash && git pull && git stash pop
+cd /opt/rdisk && git stash && git pull && git stash pop
+cd /opt/converter && git stash && git pull && git stash pop
+cd /opt/wsgidav && git stash && git pull && git stash pop
+/opt/bin/eva_configure
+
+cd /opt/eva-app && /root/bin/rebuild
+
+/opt/bin/services restart

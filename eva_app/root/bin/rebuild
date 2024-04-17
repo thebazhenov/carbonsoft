@@ -1,0 +1,2 @@
+# !/bin/bash
+pip install -r requirements.txt; npm ci; /etc/init.d/eva-app stop; /etc/init.d/eva-celery stop; /etc/init.d/postgresql restart; /usr/bin/python3 manage.py autogen && /usr/bin/python3  -m alembic upgrade heads && /usr/bin/python3 manage.py patch && export NODE_OPTIONS='--max-old-space-size=3872' && npm run build -- --configuration=custom

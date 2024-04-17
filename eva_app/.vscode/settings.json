@@ -1,0 +1,23 @@
+{
+    "deploy": {
+        "targets": [
+            {
+                "type": "sftp",
+                "name": "client",
+                "description": "Deploy to client",
+
+                "dir": "/opt",
+                "host": "localhost",
+                "privateKey": "/root/.ssh/id_rsa"
+            }
+        ]
+    },
+    "python.testing.pytestArgs": [
+        "/opt/crm/tests",
+        "-c",
+        "/opt/crm/pytest.ini"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.testing.cwd": "/opt/crm/",
+}

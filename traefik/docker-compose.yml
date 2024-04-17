@@ -1,0 +1,42 @@
+version: '3'
+services:
+  taffic-shaper:
+    image: lukaszlach/docker-tc:latest
+    container_name: docker-taffic-shaper
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/docker-tc:/var/docker-tc
+    environment:
+      HTTP_BIND: "${HTTP_BIND:-127.0.0.1}"
+      HTTP_PORT: "${HTTP_PORT:-4080}"
+    network_mode: host
+  traefik:
+    image: traefik:v2.3
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 80:80
+      - 443:443 
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/traefik.yml:/traefik.yml:ro
+      - ./data/acme.json:/acme.json
+      - ./data/custom/:/custom/:ro
+      - ./data/certs/:/certs/:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=https"
+      - "traefik.http.routers.traefik.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.services.traefik-traefik.loadbalancer.server.port=888"
+    networks:
+      carbon:
+networks:
+  carbon:
+    external: true

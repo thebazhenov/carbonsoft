@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Update ALL",
+            "command": "/root/bin/update_all"
+        },
+        {
+            "type": "shell",
+            "label": "Build eva app front",
+            "command": "cd /opt/crm && export NODE_OPTIONS='--max-old-space-size=3872' && npm run build -- --configuration=custom",
+        }
+    ]
+}

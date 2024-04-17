@@ -1,0 +1,45 @@
+# !/bin/bash
+cd /opt
+/opt/bin/eva_configure
+/opt/bin/register.sh
+mv eva-app eva-app.old
+git clone git@gitrd.carbonsoft.ru:crm/active_crm.git eva-app
+(cd eva-app && git checkout $1)
+git clone git@gitrd.carbonsoft.ru:cmf/cmf2.git eva-app/cmf
+(cd eva-app/cmf && git checkout $1)
+git clone git@gitrd.carbonsoft.ru:crm/eva_drawio_static.git eva-app/common/static/drawio
+(cd eva-app/common/static/drawio && git checkout $1)
+for file in files files.meta tmp custom backup; do
+    cp -r eva-app.old/$file eva-app
+done
+
+mv rdisk rdisk.old
+git clone git@gitrd.carbonsoft.ru:crm/rdisk.git
+cp -r rdisk.old/rdisk/custom rdisk/rdisk/custom
+cp -r rdisk.old/sessions rdisk/
+cp -r rdisk.old/tokens rdisk/
+(cd rdisk && git checkout $1)
+touch rdisk/rdisk/custom/config.py
+
+mv wsgidav wsgidav.old
+git clone git@gitrd.carbonsoft.ru:crm/wsgidav.git
+(cd wsgidav && git checkout $1)
+rm wsgidav/wsgidav.yaml
+rm wsgidav/jwt_rsa.pub
+cp wsgidav.old/wsgidav.yaml wsgidav
+cp wsgidav.old/jwt_rsa.pub wsgidav
+
+mv eva-converter eva-converter.old
+git clone git@gitrd.carbonsoft.ru:crm/converter.git eva-converter
+(cd eva-converter && git checkout $1)
+git clone git@gitrd.carbonsoft.ru:cmf/cmf2.git eva-converter/cmf
+(cd eva-converter/cmf && git checkout $1)
+for file in files files.meta tmp custom backup; do
+    cp -r eva-converter.old/$file eva-converter
+done
+
+
+mv bin bin.old
+git clone git@gitrd.carbonsoft.ru:devops/eva_bin.git bin
+(cd bin && git checkout $1)
+/root/bin/update_all

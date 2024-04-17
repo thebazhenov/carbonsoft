@@ -1,0 +1,75 @@
+version: "3.3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - DOMAIN=$DOMAIN
+        - ADMIN_EMAIL=$ADMIN_EMAIL
+        - BRANCH=$BRANCH
+        - VERSION=$VERSION
+
+    restart: unless-stopped
+    extra_hosts:
+      - ${DOMAIN}:127.0.0.1
+    networks:
+      carbon:
+    ports:
+      - "${SSH_PORT}:22"
+    volumes:
+      - evateam-opt:/opt
+      - evateam-shared:/mnt/shared
+      - evateam-tmp:/mnt/tmp
+    labels:
+      - "com.docker-tc.enabled=1"
+      - "com.docker-tc.limit=80mbps"
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.compresstraefik.compress=true"
+      #crm
+#      - "traefik.http.routers.${TRAEFIK_PREFIX}.rule=Host(`${DOMAIN}`)"
+#      - "traefik.http.routers.${TRAEFIK_PREFIX}.service=${TRAEFIK_PREFIX}"
+#      - "traefik.http.routers.${TRAEFIK_PREFIX}.entrypoints=https"
+#      - "traefik.http.services.${TRAEFIK_PREFIX}.loadbalancer.server.port=4200"
+#      - "traefik.http.routers.${TRAEFIK_PREFIX}.tls=true"
+#      - "traefik.http.services.${TRAEFIK_PREFIX}.loadbalancer.passhostheader=true"
+#      - "traefik.http.routers.${TRAEFIK_PREFIX}.middlewares=compresstraefik"
+#      - "traefik.http.routers.${TRAEFIK_PREFIX}.priority=1"
+      #crm-backend
+      - "traefik.http.routers.${TRAEFIK_PREFIX}-b.rule=Host(`${DOMAIN}`)"
+#      - "traefik.http.routers.${TRAEFIK_PREFIX}-b.rule=Host(`${DOMAIN}`) && (PathPrefix(`/pub/`, `/api/`, `/socket.io/`, `/files/`, `/static/`, `/servicedesk/api`, `/rdisk/`, `/auth`) || Path(`/auth/`))"
+      - "traefik.http.routers.${TRAEFIK_PREFIX}-b.service=${TRAEFIK_PREFIX}-b"
+      - "traefik.http.routers.${TRAEFIK_PREFIX}-b.entrypoints=https"
+      - "traefik.http.services.${TRAEFIK_PREFIX}-b.loadbalancer.server.port=8080"
+      - "traefik.http.routers.${TRAEFIK_PREFIX}-b.tls=true"
+      - "traefik.http.services.${TRAEFIK_PREFIX}-b.loadbalancer.passhostheader=true"
+      - "traefik.http.routers.${TRAEFIK_PREFIX}-b.middlewares=compresstraefik"
+      - "traefik.http.routers.${TRAEFIK_PREFIX}-b.priority=1"
+#      - "traefik.http.routers.${TRAEFIK_PREFIX}-b.priority=3"
+      #account
+#      - "traefik.http.routers.${TRAEFIK_PREFIX}_account.rule=Host(`${DOMAIN}`) && (PathPrefix(`/account/`) || Path(`/account/`))"
+      # - "traefik.http.routers.${TRAEFIK_PREFIX}_account.rule=Host(`${DOMAIN}`) && (PathPrefix(`/auth`) || Path(`/auth/`))"
+      # - "traefik.http.routers.${TRAEFIK_PREFIX}_account.service=${TRAEFIK_PREFIX}_account"
+      # - "traefik.http.routers.${TRAEFIK_PREFIX}_account.entrypoints=https"
+      # - "traefik.http.services.${TRAEFIK_PREFIX}_account.loadbalancer.server.port=8082"
+      # - "traefik.http.routers.${TRAEFIK_PREFIX}_account.tls=true"
+      # - "traefik.http.services.${TRAEFIK_PREFIX}_account.loadbalancer.passhostheader=true"
+      # - "traefik.http.routers.${TRAEFIK_PREFIX}_account.middlewares=compresstraefik"
+      # - "traefik.http.routers.${TRAEFIK_PREFIX}_account.priority=2"
+      # webdav
+      - "traefik.http.routers.${TRAEFIK_PREFIX}-webdav.rule=Host(`${DOMAIN}`) && PathPrefix(`/webdav/`)"
+      - "traefik.http.routers.${TRAEFIK_PREFIX}-webdav.service=${TRAEFIK_PREFIX}-webdav"
+      - "traefik.http.routers.${TRAEFIK_PREFIX}-webdav.entrypoints=https"
+      - "traefik.http.services.${TRAEFIK_PREFIX}-webdav.loadbalancer.server.port=8081"
+      - "traefik.http.routers.${TRAEFIK_PREFIX}-webdav.tls=true"
+      - "traefik.http.services.${TRAEFIK_PREFIX}-webdav.loadbalancer.passhostheader=true"
+      - "traefik.http.routers.${TRAEFIK_PREFIX}-webdav.middlewares=compresstraefik"
+      - "traefik.http.routers.${TRAEFIK_PREFIX}-webdav.priority=4"
+
+networks:
+  carbon:
+    external: true
+volumes:
+  evateam-opt:
+  evateam-shared:
+  evateam-tmp:
